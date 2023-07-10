@@ -1,0 +1,135 @@
+# Al's Keyboard
+# Ergogen v4.0.2
+# https://ergogen.cache.works/
+units:
+  kx: cx
+  ky: cy
+  px: kx + 4
+  py: ky + 4
+points:
+  zones:
+    matrix:
+      anchor:
+        shift: [100, -100]
+      key:
+        spread: 1.25kx
+        padding: 1ky
+      rows:
+        home:
+      columns:
+        pinky:
+          rows.home.column_net: P10
+        ring:
+          rows.home.column_net: P16
+          key.stagger: 0.66ky
+        middle:
+          rows.home.column_net: P14
+          key.stagger: 0.25ky
+        index:
+          rows.home.column_net: P15
+          key.stagger: -0.25ky
+    thumb:
+      key:
+        spread: 1.25kx
+        splay: -15
+        origin: [-0.5kx, -1ky]
+      anchor:
+        ref: matrix_index_home
+        shift: [0.66cy, -3.25cy]
+      rows:
+        cluster:
+      columns:
+        tucky:
+          rows.cluster.column_net: P9
+          key.name: thumb_tucky
+        mid:
+          rows.cluster.column_net: P8
+          key.name: thumb_mid
+        reachy:
+          rows.cluster.column_net: P7
+          key.name: thumb_reachy
+outlines:
+  row:
+    - what: rectangle
+      where: true
+      bound: true
+      size: [px, py]
+  keys:
+    - what: rectangle
+      where: true
+      bound: false
+      size: [kx-0.5,ky-0.5]
+  board:
+    - what: polygon
+      operation: stack
+      fillet: 5
+      points:
+        - ref: matrix_pinky_home
+          shift: [-0.5px, 0.5py]
+        - ref: matrix_ring_home
+          shift: [-0.5kx, 0.5py]
+        - ref: matrix_middle_home
+          shift: [-0.5kx, 0.5py]
+        - ref: matrix_middle_home
+          shift: [5.5kx, 0.5py]
+        - ref: thumb_reachy
+          shift: [0.5px, 0.5py]
+        - ref: thumb_reachy
+          shift: [0.5px, -0.5py]
+        - ref: thumb_reachy
+          shift: [-0.5px, -0.5py]
+        - ref: thumb_mid
+          shift: [0.5px,-0.5py]
+        - ref: thumb_mid
+          shift: [-0.5px,-0.5py]
+        - ref: thumb_tucky
+          shift: [-0.5px,-0.5py]
+        - ref: matrix_pinky_home
+          shift: [-0.5px,-3ky]
+  combo:
+    - name: board
+    - operation: subtract
+      name: keys
+pcbs:
+  alskbd:
+    outlines:
+      main:
+        outline: board
+    footprints:
+      choc_hotswap:
+        what: choc
+        where: true
+        params:
+          keycaps: true
+          reverse: true
+          hotswap: true
+          from: "{{column_net}}"
+          to: GND
+      promicro:
+        what: promicro
+        params:
+          orientation: "down"
+        where:
+          ref: matrix_index_home
+          shift: [3.5kx, -0.5ky]
+          rotate: -90
+      trrs:
+        what: trrs
+        params:
+          reverse: true
+          A: VCC
+          B: SCL
+          C: SDA
+          D: GND
+        where:
+          ref: matrix_index_home
+          shift: [3.75kx, -2.5ky]
+          rotate: -90
+      reset:
+        what: button
+        params:
+          from: GND
+          to: RST
+        where:
+          ref: matrix_index_home
+          shift: [2kx, 0ky]
